@@ -10,13 +10,12 @@ public class Main {
 
     private void exec(String[] args) {
         /* Needs preview flag */
-//        stringTemplateProcessing();
+        stringTemplateProcessing();
         /* Does NOT need preview flag */
         switchTest();
     }
 
     /* Needs preview flag */
-/*
     private static void stringTemplateProcessing() {
         StringTemplate.Processor<String, RuntimeException> STR = StringTemplate::interpolate;
         String name = "Erling";
@@ -30,7 +29,6 @@ public class Main {
                 "\{ occupation.toLowerCase() }" """;
         System.out.println(result);
     }
-*/
 
     private void switchTest() {
         var boss = new Boss("Leo", "Java 21 Inc.");
