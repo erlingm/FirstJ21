@@ -1,5 +1,7 @@
 package study;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class Main {
@@ -9,6 +11,8 @@ public class Main {
     }
 
     private void exec(String[] args) {
+        System.out.println();
+        jep430Example1();
         /* Needs preview flag */
         stringTemplateProcessing();
         /* Does NOT need preview flag */
@@ -17,17 +21,27 @@ public class Main {
 
     /* Needs preview flag */
     private static void stringTemplateProcessing() {
-        StringTemplate.Processor<String, RuntimeException> STR = StringTemplate::interpolate;
         String name = "Erling";
         String lastName = "Molde";
         String occupation = "Programmer";
-        String result = STR."""
+        String result = STR. """
 
                 My name is \
-                "\{ name + ' ' + lastName }"
+                "\{ name } \{ lastName }"
                 and my occupation is \
-                "\{ occupation.toLowerCase() }" """;
+                "\{ occupation.toLowerCase() }" """ ;
         System.out.println(result);
+    }
+
+    /* Example showing that the expression can be multiline, as long as the template string is "single" line */
+    private void jep430Example1() {
+        String time = STR. "The time is \{
+                // The java.time.format package is very useful
+                DateTimeFormatter
+                        .ofPattern("HH:mm:ss")
+                        .format(LocalTime.now())
+                } right now" ;
+        System.out.println(time);
     }
 
     private void switchTest() {
