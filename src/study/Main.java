@@ -3,6 +3,8 @@ package study;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.StructuredTaskScope;
 
 public class Main {
     public static void main(String[] args) {
@@ -17,6 +19,13 @@ public class Main {
         stringTemplateProcessing();
         /* Does NOT need preview flag */
         switchTest();
+        /* Needs preview flag */
+        try {
+            Response response = jep453Example1();
+            System.out.println(response);
+        } catch (InterruptedException | ExecutionException e) {
+            System.err.println(e.getMessage());
+        }
     }
 
     /* Needs preview flag */
@@ -42,6 +51,28 @@ public class Main {
                         .format(LocalTime.now())
                 } right now" ;
         System.out.println(time);
+    }
+
+    /* Needs preview flag */
+    private Response jep453Example1() throws InterruptedException, ExecutionException {
+        try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+            StructuredTaskScope.Subtask<User> user = scope.fork(this::findUser);
+            StructuredTaskScope.Subtask<Order> order = scope.fork(this::fetchOrder);
+            scope.join().throwIfFailed();
+            return new Response(user.get(), order.get());
+        }
+    }
+
+    record User(String name) {}
+
+    record Order(long id) {}
+
+    private User findUser() {
+        return new User("Erling");
+    }
+
+    private Order fetchOrder() {
+        return new Order(1);
     }
 
     private void switchTest() {
@@ -84,4 +115,6 @@ public class Main {
     record Child(String name, int birthYear, Man father, Woman mother) implements Person {}
 
     record Boss(String name, String company) implements Person {}
+
+    private record Response(User user, Order order) {}
 }
